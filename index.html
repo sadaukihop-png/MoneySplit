@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ===== ADMOB ===== -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8654378443315081"
+         crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneySplit - Split Expenses. Track Debts. Settle Easily.</title>
+    <style>
+        /* ===== RESET & BASE ===== */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            padding: 16px;
+            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
+        }
+        body.dark { background: #0f0f1a; color: #e0e0e0; }
+        .app-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            transition: background 0.3s;
+        }
+        body.dark .app-container { background: #1a1a2e; box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+
+        /* ===== HEADER ===== */
+        .app-header {
+            text-align: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e8e8e8;
+            margin-bottom: 16px;
+        }
+        body.dark .app-header { border-bottom-color: #2a2a4a; }
+        .header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .header-actions .btn-icon {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            color: #555;
+            transition: all 0.2s;
+        }
+        body.dark .header-actions .btn-icon { border-color: #444; color: #aaa; background: transparent; }
+        .header-actions .btn-icon:hover { background: #f0f0f0; }
+        body.dark .header-actions .btn-icon:hover { background: #2a2a4a; }
+
+        /* ===== LOGO ===== */
+        .logo-container { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            margin-top: -8px;
+        }
+        .logo-image { 
+            max-width: 120px; 
+            height: auto; 
+            display: block; 
+        }
+        .logo-developer { 
+            font-size: 11px; 
+            color: #999; 
+            margin-top: 2px; 
+            letter-spacing: 1px; 
+        }
+        body.dark .logo-developer { color: #777; }
+
+        /* ===== STATUS BADGE ===== */
+        .status-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-badge.free { background: #e8e8e8; color: #666; }
+        .status-badge.premium { background: #10b981; color: #fff; }
+        body.dark .status-badge.free { background: #2a2a4a; color: #999; }
+
+        /* ===== PREMIUM BANNER ===== */
+        .premium-banner {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            padding: 10px 16px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .premium-banner:hover { transform: scale(1.01); }
+        .premium-banner .highlight { text-decoration: underline; }
+
+        /* ===== INPUT GROUP ===== */
+        .input-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .input-group input {
+            flex: 1;
+            min-width: 80px;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fafafa;
+            transition: border 0.2s;
+        }
+        body.dark .input-group input { background: #252540; border-color: #3a3a5a; color: #e0e0e0; }
+        .input-group input:focus { outline: none; border-color: #3b82f6; }
+        .input-group .pct-wrapper {
+            position: relative;
+            flex: 0.8;
+            min-width: 70px;
+        }
+        .input-group .pct-wrapper input { padding-right: 28px; width: 100%; }
+        .input-group .pct-wrapper .pct-symbol {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-weight: 600;
+            font-size: 14px;
+            pointer-events: none;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .btn:hover { transform: scale(0.97); }
+        .btn-primary { background: #3b82f6; color: #fff; }
+        .btn-primary:hover { background: #2563eb; }
+        .btn-success { background: #10b981; color: #fff; }
+        .btn-success:hover { background: #059669; }
+        .btn-danger { background: #ef4444; color: #fff; }
+        .btn-danger:hover { background: #dc2626; }
+        .btn-outline { background: transparent; color: #555; border: 1px solid #ddd; }
+        body.dark .btn-outline { color: #aaa; border-color: #444; }
+        .btn-outline:hover { background: #f0f0f0; }
+        body.dark .btn-outline:hover { background: #2a2a4a; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .btn-gold { background: linear-gradient(135deg, #f59e0b, #d97706); color: #fff; }
+        .btn-gold:hover { transform: scale(0.97); }
+        .btn-block { width: 100%; justify-content: center; }
+
+        /* ===== MEMBER LIST ===== */
+        .member-list { max-height: 250px; overflow-y: auto; margin: 12px 0; }
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f8fc;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            animation: fadeIn 0.2s ease;
+        }
+        body.dark .member-item { background: #252540; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        .member-item .name { font-weight: 500; font-size: 14px; cursor: pointer; color: #3b82f6; text-decoration: underline; }
+        body.dark .member-item .name { color: #60a5fa; }
+        .member-item .pct { color: #3b82f6; font-weight: 600; font-size: 14px; }
+        body.dark .member-item .pct { color: #60a5fa; }
+        .member-item .remove-btn {
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 18px;
+            cursor: pointer;
+            transition: color 0.2s;
+            padding: 0 4px;
+        }
+        .member-item .remove-btn:hover { color: #ef4444; }
+        .empty-msg { text-align: center; color: #aaa; padding: 20px 0; font-size: 14px; }
+        body.dark .empty-msg { color: #666; }
+
+        /* ===== TOTAL BAR ===== */
+        .total-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 2px solid #e8e8e8;
+            margin-top: 4px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        body.dark .total-bar { border-top-color: #2a2a4a; }
+        .total-bar .total-valid { color: #10b981; }
+        .total-bar .total-invalid { color: #ef4444; }
+        .total-bar .total-warning { font-size: 12px; font-weight: 400; color: #ef4444; }
+
+        /* ===== SETTINGS PANEL ===== */
+        .settings-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            padding: 14px;
+            background: #f8f8fc;
+            border-radius: 12px;
+            margin: 12px 0;
+        }
+        body.dark .settings-panel { background: #252540; }
+        .settings-panel label { font-size: 12px; font-weight: 500; color: #888; display: flex; flex-direction: column; gap: 4px; }
+        body.dark .settings-panel label { color: #999; }
+        .settings-panel select, .settings-panel input[type="number"] {
+            padding: 6px 8px; border-radius: 8px; border: 1px solid #ddd; font-size: 13px; background: #fff;
+        }
+        body.dark .settings-panel select, body.dark .settings-panel input[type="number"] {
+            background: #1a1a2e; border-color: #3a3a5a; color: #e0e0e0;
+        }
+        .settings-panel .checkbox-row { flex-direction: row; align-items: center; gap: 8px; cursor: pointer; }
+        .settings-panel .checkbox-row input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; }
+
+        /* ===== SALE SECTION ===== */
+        .sale-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .sale-section .currency-symbol { font-size: 20px; font-weight: 700; color: #3b82f6; min-width: 24px; }
+        body.dark .sale-section .currency-symbol { color: #60a5fa; }
+        .sale-section input {
+            flex: 2;
+            min-width: 120px;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #fafafa;
+            transition: border 0.2s;
+        }
+        body.dark .sale-section input { background: #252540; border-color: #3a3a5a; color: #e0e0e0; }
+        .sale-section input:focus { outline: none; border-color: #3b82f6; }
+        .sale-section .calc-btn { flex: 1; min-width: 100px; padding: 10px 20px; }
+
+        /* ===== RESULTS ===== */
+        .results {
+            background: #f8f8fc;
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 16px;
+            min-height: 80px;
+            transition: background 0.3s;
+        }
+        body.dark .results { background: #252540; }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e8e8e8;
+            font-size: 14px;
+            animation: fadeIn 0.15s ease;
+        }
+        body.dark .result-row { border-bottom-color: #3a3a5a; }
+        .result-row:last-child {
+            border-bottom: none;
+            border-top: 2px solid #ddd;
+            margin-top: 4px;
+            padding-top: 10px;
+            font-weight: 700;
+            font-size: 16px;
+        }
+        body.dark .result-row:last-child { border-top-color: #3a3a5a; }
+        .result-row .amount { font-family: 'Courier New', monospace; font-weight: 600; }
+        .result-title { font-weight: 600; font-size: 15px; margin-bottom: 8px; }
+
+        /* ===== PIE CHART ===== */
+        .pie-container { margin-top: 16px; text-align: center; }
+        .pie-chart { display: inline-block; width: 120px; height: 120px; border-radius: 50%; border: 2px solid #ddd; }
+        body.dark .pie-chart { border-color: #3a3a5a; }
+        .pie-legend { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 10px; font-size: 12px; }
+        .pie-legend-item { display: flex; align-items: center; gap: 4px; }
+        .pie-legend-item .color-dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+
+        /* ===== BULK AREA ===== */
+        .bulk-area { margin: 8px 0; }
+        .bulk-area textarea {
+            width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 10px; font-size: 13px;
+            font-family: monospace; resize: vertical; min-height: 60px; background: #fafafa;
+        }
+        body.dark .bulk-area textarea { background: #252540; border-color: #3a3a5a; color: #e0e0e0; }
+        .bulk-area .hint { font-size: 11px; color: #999; margin: 4px 0; }
+        body.dark .bulk-area .hint { color: #666; }
+        .bulk-actions { display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap; }
+
+        /* ===== ACTIONS BAR ===== */
+        .actions-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e8e8e8;
+        }
+        body.dark .actions-bar { border-top-color: #2a2a4a; }
+
+        /* ===== MODAL / OVERLAY ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: #fff;
+            border-radius: 24px;
+            padding: 24px;
+            max-width: 480px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalIn 0.3s ease;
+        }
+        body.dark .modal { background: #1a1a2e; }
+        @keyframes modalIn { from { opacity: 0; transform: scale(0.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .modal .modal-close {
+            float: right;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+            padding: 0 4px;
+        }
+        body.dark .modal .modal-close { color: #666; }
+        .modal .modal-close:hover { color: #333; }
+        body.dark .modal .modal-close:hover { color: #ccc; }
+        .modal h2 { font-size: 20px; margin-bottom: 8px; }
+        .modal .modal-subtitle { color: #888; font-size: 14px; margin-bottom: 16px; }
+        body.dark .modal .modal-subtitle { color: #999; }
+
+        /* ===== PRICING PLANS ===== */
+        .plan-card {
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        body.dark .plan-card { border-color: #2a2a4a; background: #252540; }
+        .plan-card:hover { border-color: #3b82f6; }
+        .plan-card.selected { border-color: #3b82f6; background: #eff6ff; }
+        body.dark .plan-card.selected { background: #1a2a4a; border-color: #60a5fa; }
+        .plan-card .plan-name { font-weight: 700; font-size: 16px; }
+        .plan-card .plan-price { font-size: 18px; font-weight: 700; color: #3b82f6; }
+        body.dark .plan-card .plan-price { color: #60a5fa; }
+        .plan-card .plan-desc { font-size: 12px; color: #888; margin-top: 2px; }
+        body.dark .plan-card .plan-desc { color: #999; }
+        .plan-card .plan-features { font-size: 13px; margin-top: 6px; color: #555; }
+        body.dark .plan-card .plan-features { color: #aaa; }
+        .plan-card .plan-features .feature-item { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+        .plan-card .plan-features .feature-item .check { color: #10b981; }
+        .plan-card .plan-features .feature-item .cross { color: #ef4444; }
+        .plan-card .badge-best {
+            background: #f59e0b;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        /* ===== FORM INPUTS IN MODAL ===== */
+        .modal-form-group { margin-bottom: 12px; }
+        .modal-form-group label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 4px; }
+        body.dark .modal-form-group label { color: #aaa; }
+        .modal-form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            background: #fafafa;
+        }
+        body.dark .modal-form-group input { background: #252540; border-color: #3a3a5a; color: #e0e0e0; }
+        .modal-form-group input:focus { outline: none; border-color: #3b82f6; }
+
+        /* ===== TOAST NOTIFICATION ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1a1a2e;
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            max-width: 90%;
+            text-align: center;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+        .toast.success { background: #10b981; }
+        .toast.error { background: #ef4444; }
+        .toast.info { background: #3b82f6; }
+
+        /* ===== AD BANNER ===== */
+        .ad-banner {
+            margin: 12px 0;
+            text-align: center;
+            min-height: 50px;
+            background: #f0f2f5;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #aaa;
+            overflow: hidden;
+        }
+        body.dark .ad-banner { background: #252540; color: #555; }
+        .ad-banner.hidden { display: none; }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 500px) {
+            .app-container { padding: 14px; border-radius: 16px; }
+            .input-group { flex-direction: column; }
+            .input-group .pct-wrapper { flex: 1; }
+            .sale-section { flex-direction: column; }
+            .sale-section .calc-btn { width: 100%; }
+            .settings-panel { grid-template-columns: 1fr 1fr; }
+            .modal { padding: 16px; margin: 10px; }
+            .logo-image { max-width: 100px; }
+        }
+        @media (max-width: 380px) {
+            .settings-panel { grid-template-columns: 1fr; }
+            .btn { font-size: 12px; padding: 8px 12px; }
+            .member-item { font-size: 13px; padding: 6px 10px; }
+        }
+        .member-list::-webkit-scrollbar { width: 4px; }
+        .member-list::-webkit-scrollbar-track { background: #f0f0f0; border-radius: 4px; }
+        body.dark .member-list::-webkit-scrollbar-track { background: #252540; }
+        .member-list::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+        body.dark .member-list::-webkit-scrollbar-thumb { background: #3a3a5a; }
+        
+        /* ===== FEEDBACK ===== */
+        #msFeedback{margin-top:14px;padding:16px;border:1px solid #e5e7eb;border-radius:16px;background:#fff}#msFeedback h3{margin:0 0 5px}#msFeedback p{margin:0 0 10px;color:#666;font-size:13px}#msFeedback select,#msFeedback input,#msFeedback textarea{width:100%;padding:10px;margin:5px 0;border:1px solid #d5d9e2;border-radius:9px;font:inherit;background:inherit;color:inherit}#msFeedback textarea{min-height:90px;resize:vertical}#msFeedback button{padding:10px 16px;border:0;border-radius:9px;cursor:pointer;font:inherit}.ms-feedback-status{min-height:20px;margin-top:7px;font-size:13px}body.dark #msFeedback{background:#1a1a2e;border-color:#2a2a4a}
+    </style>
+</head>
+<body>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== APP CONTAINER ===== -->
+<div class="app-container" id="app">
+
+    <!-- ===== HEADER ===== -->
+    <div class="app-header">
+        <div class="header-actions">
+            <button class="btn-icon" id="darkModeBtn">🌙 Dark</button>
+            <span class="status-badge free" id="statusBadge">FREE</span>
+        </div>
+        <div class="logo-container">
+            <img src="./MoneySplit.webp" alt="MoneySplit Logo" class="logo-image" />
+            <div class="logo-developer">UMMAH SOFTWARE</div>
+        </div>
+    </div>
+
+    <!-- ===== PREMIUM STATUS BANNER ===== -->
+    <div class="premium-banner" id="premiumBanner" style="display:none; cursor:pointer;" onclick="openModal()">
+        ⭐ You're on <span class="highlight">Premium</span> – Unlimited features!
+    </div>
+
+    <!-- ===== UPGRADE BANNER ===== -->
+    <div class="premium-banner" id="upgradeBanner" style="background: linear-gradient(135deg, #3b82f6, #2563eb); cursor:pointer;" onclick="openModal()">
+        🚀 Unlock <span class="highlight">Premium</span> – Unlimited members, export &amp; more!
+    </div>
+
+    <!-- ===== ADD MEMBER SECTION ===== -->
+    <div class="input-group">
+        <input type="text" id="nameInput" placeholder="Enter name" />
+        <div class="pct-wrapper">
+            <input type="number" id="pctInput" placeholder="0" min="0" max="100" step="0.1" />
+            <span class="pct-symbol">%</span>
+        </div>
+        <button class="btn btn-primary" id="addBtn">+ Add</button>
+        <button class="btn btn-outline btn-sm" id="bulkToggleBtn">📝 Bulk</button>
+    </div>
+
+    <!-- ===== BULK ADD AREA ===== -->
+    <div class="bulk-area" id="bulkArea" style="display:none;">
+        <textarea id="bulkInput" placeholder="John 30&#10;Mary 40&#10;Bob 30"></textarea>
+        <div class="hint">One per line: Name [space] Percentage</div>
+        <div class="bulk-actions">
+            <button class="btn btn-success btn-sm" id="bulkAddBtn">Add All</button>
+            <button class="btn btn-outline btn-sm" id="bulkCancelBtn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- ===== MEMBER LIST ===== -->
+    <div class="member-list" id="memberList">
+        <div class="empty-msg">No members yet. Add someone above.</div>
+    </div>
+
+    <!-- ===== TOTAL BAR ===== -->
+    <div class="total-bar">
+        <span>Total</span>
+        <span id="totalPctDisplay">0%</span>
+    </div>
+
+    <!-- ===== SETTINGS PANEL ===== -->
+    <div class="settings-panel">
+        <label>Currency
+            <select id="currencySelect">
+                <option value="₦">₦ NGN</option>
+                <option value="$">$ USD</option>
+                <option value="€">€ EUR</option>
+                <option value="£">£ GBP</option>
+            </select>
+        </label>
+        <label>Decimals
+            <select id="decimalSelect">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2" selected>2</option>
+                <option value="4">4</option>
+            </select>
+        </label>
+        <label class="checkbox-row">
+            <input type="checkbox" id="roundingCheck" checked /> Auto-round
+        </label>
+        <label class="checkbox-row">
+            <input type="checkbox" id="pieCheck" /> Pie chart
+        </label>
+    </div>
+
+    <!-- ===== SALE PRICE SECTION ===== -->
+    <div class="sale-section">
+        <span class="currency-symbol" id="currencyDisplay">₦</span>
+        <input type="text" id="salePrice" placeholder="Total sale price" inputmode="decimal" />
+        <button class="btn btn-success calc-btn" id="calculateBtn">🧮 Calculate</button>
+    </div>
+
+    <!-- ===== RESULTS ===== -->
+    <div class="results" id="results">
+        <div class="empty-msg">Add members, enter price, then click Calculate.</div>
+    </div>
+
+    <!-- ===== ACTIONS BAR ===== -->
+    <div class="actions-bar">
+        <button class="btn btn-outline btn-sm" id="undoBtn">↩ Undo</button>
+        <button class="btn btn-outline btn-sm" id="resetBtn">🔄 Reset</button>
+        <button class="btn btn-outline btn-sm" id="exportBtn">📋 Export</button>
+        <button class="btn btn-gold btn-sm" id="upgradeBtn" style="margin-left:auto;">⭐ Upgrade</button>
+    </div>
+
+    <!-- ===== AD BANNER ===== -->
+    <div class="ad-banner" id="adBanner">
+        📢 Ad placeholder – Upgrade to remove
+    </div>
+
+    <!-- ===== ADMOB BANNER ===== -->
+    <div id="adContainer" style="text-align:center;margin-top:12px;min-height:50px;">
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:320px;height:50px"
+             data-ad-client="ca-pub-8654378443315081"
+             data-ad-slot="8796152682"></ins>
+    </div>
+
+    <!-- ===== FEEDBACK ===== -->
+    <section id="msFeedback" aria-label="MoneySplit feedback">
+        <h3>💬 Feedback</h3>
+        <p>Tell us what you think, suggest an improvement, or report a problem.</p>
+        <form id="msFeedbackForm">
+            <select id="msFeedbackType"><option value="general">General feedback</option><option value="suggestion">Suggestion</option><option value="bug">Report a problem</option><option value="payment">Payment issue</option></select>
+            <select id="msFeedbackRating"><option value="">Rating (optional)</option><option value="5">★★★★★ Excellent</option><option value="4">★★★★☆ Good</option><option value="3">★★★☆☆ Okay</option><option value="2">★★☆☆☆ Poor</option><option value="1">★☆☆☆☆ Very poor</option></select>
+            <textarea id="msFeedbackMessage" maxlength="2000" required placeholder="Write your feedback..."></textarea>
+            <input id="msFeedbackEmail" type="email" maxlength="160" placeholder="Email (optional)">
+            <button type="submit">Send Feedback</button>
+            <div id="msFeedbackStatus" class="ms-feedback-status" role="status" aria-live="polite"></div>
+        </form>
+    </section>
+</div>
+
+<!-- ===== MODAL OVERLAY ===== -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <button class="modal-close" id="modalClose">✕</button>
+        <h2>🚀 Upgrade to Premium</h2>
+        <p class="modal-subtitle">Choose a plan and currency that works for you</p>
+
+        <div class="plan-card" data-plan="monthly">
+            <div class="plan-name">Monthly</div>
+            <div class="plan-price" id="monthlyPrice">₦1,000 <span style="font-size:14px;font-weight:400;color:#888;">/month</span></div>
+            <div class="plan-desc">Flexible, cancel anytime</div>
+            <div class="plan-features">
+                <div class="feature-item"><span class="check">✅</span> Unlimited members</div>
+                <div class="feature-item"><span class="check">✅</span> Export results</div>
+                <div class="feature-item"><span class="check">✅</span> Save calculations</div>
+                <div class="feature-item"><span class="check">✅</span> Remove ads</div>
+                <div class="feature-item"><span class="check">✅</span> Pie chart view</div>
+            </div>
+        </div>
+
+        <div class="plan-card selected" data-plan="yearly">
+            <div class="plan-name">Yearly <span class="badge-best">Best Value</span></div>
+            <div class="plan-price" id="yearlyPrice">₦5,000 <span style="font-size:14px;font-weight:400;color:#888;">/year</span></div>
+            <div class="plan-desc">Save ₦7,000 vs monthly! 🎉</div>
+            <div class="plan-features">
+                <div class="feature-item"><span class="check">✅</span> Unlimited members</div>
+                <div class="feature-item"><span class="check">✅</span> Export results</div>
+                <div class="feature-item"><span class="check">✅</span> Save calculations</div>
+                <div class="feature-item"><span class="check">✅</span> Remove ads</div>
+                <div class="feature-item"><span class="check">✅</span> Pie chart view</div>
+            </div>
+        </div>
+
+        <div class="modal-form-group">
+            <label>💳 Payment Currency (prices shown in ₦)</label>
+            <select id="modalCurrency">
+                <option value="NGN">₦ NGN - Nigerian Naira (Price shown)</option>
+                <option value="USD">$ USD - US Dollar</option>
+                <option value="EUR">€ EUR - Euro</option>
+                <option value="GBP">£ GBP - British Pound</option>
+                <option value="GHS">₵ GHS - Ghanaian Cedi</option>
+                <option value="KES">KSh KES - Kenyan Shilling</option>
+                <option value="ZAR">R ZAR - South African Rand</option>
+            </select>
+        </div>
+
+        <div class="modal-form-group">
+            <label>Full Name</label>
+            <input type="text" id="modalName" placeholder="Enter your full name" />
+        </div>
+        <div class="modal-form-group">
+            <label>Email Address</label>
+            <input type="email" id="modalEmail" placeholder="Enter your email" />
+        </div>
+
+        <button class="btn btn-gold btn-block" id="payBtn" style="padding:14px;font-size:16px;margin-top:8px;">
+            💳 Pay Now
+        </button>
+        <p style="font-size:11px;color:#999;text-align:center;margin-top:8px;">
+            Secure payment via Flutterwave
+        </p>
+    </div>
+</div>
+
+<script>
+    // ============================================================
+    // ===== CONFIGURATION =====
+    // ============================================================
+    const PAYMENT_API_BASE_URL = "";
+
+    // ============================================================
+    // ===== STATE =====
+    // ============================================================
+    let members = [];
+    let history = [];
+    let isPremium = localStorage.getItem('moneysplit_premium') === 'true';
+    let premiumExpiry = localStorage.getItem('moneysplit_expiry') || null;
+    let isDark = localStorage.getItem('moneysplit_dark') === 'true';
+    let selectedPlan = 'yearly';
+    const MAX_HISTORY = 50;
+    const FREE_MEMBER_LIMIT = 3;
+
+    // ============================================================
+    // ===== DOM REFS =====
+    // ============================================================
+    const nameInput = document.getElementById('nameInput');
+    const pctInput = document.getElementById('pctInput');
+    const addBtn = document.getElementById('addBtn');
+    const memberList = document.getElementById('memberList');
+    const totalPctDisplay = document.getElementById('totalPctDisplay');
+    const salePrice = document.getElementById('salePrice');
+    const resultsDiv = document.getElementById('results');
+    const resetBtn = document.getElementById('resetBtn');
+    const undoBtn = document.getElementById('undoBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    const currencySelect = document.getElementById('currencySelect');
+    const decimalSelect = document.getElementById('decimalSelect');
+    const roundingCheck = document.getElementById('roundingCheck');
+    const pieCheck = document.getElementById('pieCheck');
+    const currencyDisplay = document.getElementById('currencyDisplay');
+    const bulkToggleBtn = document.getElementById('bulkToggleBtn');
+    const bulkArea = document.getElementById('bulkArea');
+    const bulkInput = document.getElementById('bulkInput');
+    const bulkAddBtn = document.getElementById('bulkAddBtn');
+    const bulkCancelBtn = document.getElementById('bulkCancelBtn');
+    const toast = document.getElementById('toast');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const darkModeBtn = document.getElementById('darkModeBtn');
+    const statusBadge = document.getElementById('statusBadge');
+    const premiumBanner = document.getElementById('premiumBanner');
+    const upgradeBanner = document.getElementById('upgradeBanner');
+    const adBanner = document.getElementById('adBanner');
+    const adContainer = document.getElementById('adContainer');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalClose = document.getElementById('modalClose');
+    const modalName = document.getElementById('modalName');
+    const modalEmail = document.getElementById('modalEmail');
+    const payBtn = document.getElementById('payBtn');
+    const planCards = document.querySelectorAll('.plan-card');
+
+    // ============================================================
+    // ===== HELPERS =====
+    // ============================================================
+    function sanitizeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function saveHistory() {
+        history.push(JSON.stringify(members));
+        if (history.length > MAX_HISTORY) history.shift();
+    }
+
+    function undo() {
+        if (history.length === 0) { showToast('Nothing to undo', 'info'); return; }
+        const last = history.pop();
+        members = JSON.parse(last);
+        render();
+        showToast('Undo successful', 'success');
+    }
+
+    function getCurrency() { return currencySelect.value; }
+    function getDecimals() { return parseInt(decimalSelect.value); }
+    function shouldRound() { return roundingCheck.checked; }
+    function showPie() { return pieCheck.checked; }
+
+    function formatMoney(amount) {
+        if (isNaN(amount) || !isFinite(amount)) {
+            return getCurrency() + '0.' + '0'.repeat(getDecimals());
+        }
+        const decimals = getDecimals();
+        let formatted = amount.toFixed(decimals);
+        let parts = formatted.split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return getCurrency() + parts.join('.');
+    }
+
+    function formatWithCommas(num) {
+        if (isNaN(num)) return '0';
+        let parts = num.toString().split('.');
+        parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return parts.join('.');
+    }
+
+    function showToast(msg, type = 'info') {
+        toast.textContent = msg;
+        toast.className = 'toast ' + type;
+        toast.classList.add('show');
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function getTotal() {
+        return members.reduce((s, m) => s + m.pct, 0);
+    }
+
+    function isTotalValid() {
+        return members.length > 0 && Math.abs(getTotal() - 100) < 0.01;
+    }
+
+    function getSalePrice() {
+        return parseFloat(salePrice.value.replace(/,/g, '')) || 0;
+    }
+
+    function checkPremium() {
+        if (isPremium && premiumExpiry) {
+            const now = new Date();
+            const expiry = new Date(premiumExpiry);
+            if (now > expiry) {
+                isPremium = false;
+                premiumExpiry = null;
+                localStorage.removeItem('moneysplit_premium');
+                localStorage.removeItem('moneysplit_expiry');
+            }
+        }
+        return isPremium;
+    }
+
+    function getMemberLimit() {
+        return checkPremium() ? Infinity : FREE_MEMBER_LIMIT;
+    }
+
+       // ============================================================
+    // ===== CALCULATE =====
+    // ============================================================
+    function calculate() {
+        if (!isTotalValid()) {
+            showToast('Total percentage must equal 100%', 'error');
+            resultsDiv.innerHTML = `<div class="empty-msg">⚠️ Total must equal 100% to calculate.</div>`;
+            return;
+        }
+        const price = getSalePrice();
+        if (!price || price <= 0) {
+            showToast('Enter a valid sale price', 'error');
+            resultsDiv.innerHTML = `<div class="empty-msg">⚠️ Enter a valid sale price.</div>`;
+            return;
+        }
+
+        let workingMembers = members.map(m => ({ ...m }));
+
+        if (shouldRound() && workingMembers.length > 0) {
+            const shares = workingMembers.map(m => (m.pct / 100) * price);
+            const totalShares = shares.reduce((a, b) => a + b, 0);
+            const diff = price - totalShares;
+            if (Math.abs(diff) > 0.001) {
+                const maxIdx = shares.indexOf(Math.max(...shares));
+                shares[maxIdx] += diff;
+                workingMembers = workingMembers.map((m, i) => ({ ...m, _share: shares[i] }));
+            } else {
+                workingMembers = workingMembers.map((m, i) => ({ ...m, _share: shares[i] }));
+            }
+        } else {
+            workingMembers = workingMembers.map(m => ({ ...m, _share: (m.pct / 100) * price }));
+        }
+
+        let html = `<div class="result-title">💰 Payouts</div>`;
+        let totalChecked = 0;
+        workingMembers.forEach((m, i) => {
+            const share = m._share;
+            totalChecked += share;
+            const displayPct = members[i].pct;
+            html += `<div class="result-row">
+                <span>${sanitizeHtml(m.name)} (${displayPct}%)</span>
+                <span class="amount">${formatMoney(share)}</span>
+            </div>`;
+        });
+        html += `<div class="result-row">
+            <span>Total</span>
+            <span class="amount">${formatMoney(totalChecked)}</span>
+        </div>`;
+
+        if (showPie() && members.length > 0) {
+            html += `<div class="pie-container">
+                <div class="pie-chart" style="background:conic-gradient(
+                    ${members.map((m, i) => {
+                        const start = members.slice(0, i).reduce((s, x) => s + x.pct, 0);
+                        const end = start + m.pct;
+                        const hue = (i * 137.5) % 360;
+                        return `hsl(${hue}, 70%, 55%) ${start}% ${end}%`;
+                    }).join(', ')}
+                );"></div>
+                <div class="pie-legend">
+                    ${members.map((m, i) => {
+                        const hue = (i * 137.5) % 360;
+                        return `<span class="pie-legend-item">
+                            <span class="color-dot" style="background:hsl(${hue},70%,55%);"></span>
+                            ${sanitizeHtml(m.name)} (${m.pct}%)
+                        </span>`;
+                    }).join('')}
+                </div>
+            </div>`;
+        }
+
+        resultsDiv.innerHTML = html;
+    }
+
+    // ============================================================
+    // ===== ADD MEMBER =====
+    // ============================================================
+    function addMember(name, pct) {
+        name = name.trim();
+        if (!name) { showToast('Please enter a name.', 'error'); return false; }
+        if (isNaN(pct) || pct < 0 || pct > 100) { showToast('Enter a valid percentage (0–100).', 'error'); return false; }
+        if (members.some(m => m.name.toLowerCase() === name.toLowerCase())) {
+            showToast('Duplicate name.', 'error');
+            return false;
+        }
+        const total = getTotal();
+        if (total + pct > 100.01) {
+            showToast(`Adding ${pct}% would exceed 100% (current: ${total.toFixed(1)}%).`, 'error');
+            return false;
+        }
+        const limit = getMemberLimit();
+        if (members.length >= limit) {
+            showToast(`Free version limited to ${limit} members. Upgrade to add more!`, 'error');
+            openModal();
+            return false;
+        }
+        saveHistory();
+        members.push({ name, pct });
+        render();
+        return true;
+    }
+
+    // ============================================================
+    // ===== RENDER =====
+    // ============================================================
+    function render() {
+        const isPrem = checkPremium();
+
+        statusBadge.textContent = isPrem ? 'PREMIUM' : 'FREE';
+        statusBadge.className = 'status-badge ' + (isPrem ? 'premium' : 'free');
+
+        premiumBanner.style.display = isPrem ? 'block' : 'none';
+        upgradeBanner.style.display = isPrem ? 'none' : 'block';
+        adBanner.style.display = isPrem ? 'none' : 'block';
+        if (adContainer) { adContainer.style.display = isPrem ? 'none' : 'block'; }
+
+        if (members.length === 0) {
+            memberList.innerHTML = `<div class="empty-msg">No members yet. Add someone above.</div>`;
+        } else {
+            memberList.innerHTML = members.map((m, i) => `
+                <div class="member-item">
+                    <span class="name" data-index="${i}">${sanitizeHtml(m.name)}</span>
+                    <span class="pct">${m.pct}%</span>
+                    <button class="remove-btn" data-index="${i}">✕</button>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.member-item .remove-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    saveHistory();
+                    members.splice(idx, 1);
+                    render();
+                });
+            });
+
+            document.querySelectorAll('.member-item .name').forEach(nameEl => {
+                nameEl.addEventListener('click', function() {
+                    const idx = parseInt(this.dataset.index);
+                    const member = members[idx];
+                    nameInput.value = member.name;
+                    pctInput.value = member.pct;
+                    saveHistory();
+                    members.splice(idx, 1);
+                    render();
+                    nameInput.focus();
+                    nameInput.select();
+                    showToast('Edit the name or percentage, then click Add', 'info');
+                });
+            });
+        }
+
+        const total = getTotal();
+        const valid = isTotalValid();
+        const pctColor = valid ? 'total-valid' : 'total-invalid';
+        const pctIcon = valid ? '✅' : '⚠️';
+        let totalHtml = `${total.toFixed(1)}% <span class="${pctColor}">${pctIcon}</span>`;
+        if (members.length > 0 && !valid) {
+            totalHtml += ` <span class="total-warning">(must equal 100%)</span>`;
+        }
+        totalPctDisplay.innerHTML = totalHtml;
+        currencyDisplay.textContent = getCurrency();
+    }
+
+    // ============================================================
+    // ===== MODAL FUNCTIONS =====
+    // ============================================================
+    function openModal() { modalOverlay.classList.add('active'); }
+    function closeModal() { modalOverlay.classList.remove('active'); }
+
+    // Make openModal available globally for onclick
+    window.openModal = openModal;
+
+    planCards.forEach(card => {
+        card.addEventListener('click', function() {
+            planCards.forEach(c => c.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedPlan = this.dataset.plan;
+        });
+    });
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', function(e) {
+        if (e.target === this) closeModal();
+    });
+
+    // ============================================================
+    // ===== PAYMENT =====
+    // ============================================================
+    payBtn.addEventListener('click', async function() {
+        const name = modalName.value.trim();
+        const email = modalEmail.value.trim();
+        const currency = document.getElementById('modalCurrency').value;
+
+        if (!name) { showToast('Please enter your full name.', 'error'); return; }
+        if (!email) { showToast('Please enter your email address.', 'error'); return; }
+        if (!email.includes('@')) { showToast('Please enter a valid email.', 'error'); return; }
+
+        localStorage.setItem('moneysplit_selected_plan', selectedPlan);
+        localStorage.setItem('moneysplit_payment_email', email);
+        localStorage.setItem('moneysplit_payment_name', name);
+
+        payBtn.disabled = true;
+        payBtn.textContent = '⏳ Starting payment...';
+
+        try {
+            const response = await fetch(PAYMENT_API_BASE_URL + '/api/create-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    currency: currency,
+                    plan: selectedPlan
+                })
+            });
+
+            const data = await response.json().catch(() => ({}));
+
+            if (!response.ok || !data.payment_link) {
+                throw new Error(data.error || 'Unable to start payment.');
+            }
+
+            showToast('Redirecting to secure payment...', 'info');
+            window.location.href = data.payment_link;
+        } catch (error) {
+            console.error('Payment start error:', error);
+            showToast(error.message || 'Unable to start payment.', 'error');
+            payBtn.disabled = false;
+            payBtn.textContent = '💳 Pay Now';
+        }
+    });
+
+    // ============================================================
+    // ===== UPDATE PLAN PRICES =====
+    // ============================================================
+    document.getElementById('modalCurrency').addEventListener('change', function() {
+        const currency = this.value;
+        const symbols = { 'NGN': '₦', 'USD': '$', 'EUR': '€', 'GBP': '£', 'GHS': '₵', 'KES': 'KSh', 'ZAR': 'R' };
+        const prices = {
+            'NGN': { monthly: 1000, yearly: 5000 },
+            'USD': { monthly: 0.65, yearly: 3.25 },
+            'EUR': { monthly: 0.60, yearly: 3.00 },
+            'GBP': { monthly: 0.50, yearly: 2.50 },
+            'GHS': { monthly: 10, yearly: 50 },
+            'KES': { monthly: 85, yearly: 425 },
+            'ZAR': { monthly: 12, yearly: 60 }
+        };
+        const symbol = symbols[currency] || '₦';
+        const monthlyPrice = prices[currency].monthly;
+        const yearlyPrice = prices[currency].yearly;
+
+        document.querySelector('[data-plan="monthly"] .plan-price').innerHTML =
+            symbol + formatWithCommas(monthlyPrice) + ' <span style="font-size:14px;font-weight:400;color:#888;">/month</span>';
+
+        document.querySelector('[data-plan="yearly"] .plan-price').innerHTML =
+            symbol + formatWithCommas(yearlyPrice) + ' <span style="font-size:14px;font-weight:400;color:#888;">/year</span>';
+
+        const savings = (monthlyPrice * 12) - yearlyPrice;
+        document.querySelector('[data-plan="yearly"] .plan-desc').textContent =
+            'Save ' + symbol + formatWithCommas(savings) + ' vs monthly! 🎉';
+    });
+
+    // ============================================================
+    // ===== CHECK PAYMENT STATUS =====
+    // ============================================================
+    async function checkPaymentStatus() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const payment = urlParams.get('payment');
+        const proof = urlParams.get('proof');
+
+        if (payment === 'verified' && proof) {
+            try {
+                const response = await fetch(
+                    PAYMENT_API_BASE_URL + '/api/payment-result?proof=' + encodeURIComponent(proof)
+                );
+                const result = await response.json().catch(() => ({}));
+
+                if (!response.ok || !result.verified) {
+                    throw new Error(result.error || 'Payment could not be verified.');
+                }
+
+                const plan = result.plan === 'monthly' ? 'monthly' : 'yearly';
+                const expiry = new Date();
+                if (plan === 'monthly') {
+                    expiry.setMonth(expiry.getMonth() + 1);
+                } else {
+                    expiry.setFullYear(expiry.getFullYear() + 1);
+                }
+
+                isPremium = true;
+                premiumExpiry = expiry.toISOString();
+                localStorage.setItem('moneysplit_premium', 'true');
+                localStorage.setItem('moneysplit_expiry', premiumExpiry);
+                localStorage.removeItem('moneysplit_selected_plan');
+
+                showToast('🎉 Payment verified! Premium activated.', 'success');
+                closeModal();
+                render();
+
+                window.history.replaceState({}, document.title, window.location.pathname);
+            } catch (error) {
+                console.error('Payment verification error:', error);
+                showToast('Payment could not be verified. Please contact support.', 'error');
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            return true;
+        }
+
+        if (payment === 'cancelled') {
+            showToast('Payment was cancelled.', 'info');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return false;
+        }
+
+        if (payment === 'failed') {
+            showToast('Payment could not be verified. No Premium was activated.', 'error');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return false;
+        }
+
+        if (payment === 'already_processed') {
+            showToast('This payment has already been processed.', 'info');
+            window.history.replaceState({}, document.title, window.location.pathname);
+            return false;
+        }
+
+        return false;
+    }
+
+    // ============================================================
+    // ===== EVENTS =====
+    // ============================================================
+    addBtn.addEventListener('click', function() {
+        const name = nameInput.value;
+        const pct = parseFloat(pctInput.value);
+        if (addMember(name, pct)) {
+            nameInput.value = '';
+            pctInput.value = '';
+            nameInput.focus();
+        }
+    });
+
+    nameInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addBtn.click(); });
+    pctInput.addEventListener('keydown', function(e) { if (e.key === 'Enter') addBtn.click(); });
+    calculateBtn.addEventListener('click', calculate);
+
+    currencySelect.addEventListener('change', render);
+    decimalSelect.addEventListener('change', render);
+    roundingCheck.addEventListener('change', render);
+    pieCheck.addEventListener('change', render);
+
+    salePrice.addEventListener('input', function() {
+        let raw = this.value.replace(/,/g, '');
+        if (raw === '') { this.value = ''; render(); return; }
+        let num = parseFloat(raw);
+        if (!isNaN(num)) { this.value = formatWithCommas(num); }
+        render();
+    });
+
+    salePrice.addEventListener('blur', function() {
+        if (this.value === '') return;
+        let raw = this.value.replace(/,/g, '');
+        let num = parseFloat(raw);
+        if (!isNaN(num)) { this.value = formatWithCommas(num); }
+    });
+
+    resetBtn.addEventListener('click', function() {
+        if (members.length === 0 && !salePrice.value) return;
+        if (confirm('Clear all members and sale price?')) {
+            saveHistory();
+            members = [];
+            salePrice.value = '';
+            resultsDiv.innerHTML = `<div class="empty-msg">Add members, enter price, then click Calculate.</div>`;
+            render();
+            showToast('Reset complete', 'success');
+        }
+    });
+
+    undoBtn.addEventListener('click', undo);
+
+    darkModeBtn.addEventListener('click', function() {
+        isDark = !isDark;
+        document.body.classList.toggle('dark', isDark);
+        darkModeBtn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        localStorage.setItem('moneysplit_dark', isDark);
+    });
+
+    exportBtn.addEventListener('click', function() {
+        if (members.length === 0) { showToast('No data to export', 'error'); return; }
+        let text = 'MoneySplit - Split Results\n';
+        text += 'Sale Price: ' + formatMoney(getSalePrice() || 0) + '\n';
+        text += 'Date: ' + new Date().toLocaleString() + '\n';
+        text += '---\n';
+        let total = 0;
+        members.forEach(function(m) {
+            const share = (m.pct / 100) * (getSalePrice() || 0);
+            total += share;
+            text += m.name + ' (' + m.pct + '%): ' + formatMoney(share) + '\n';
+        });
+        text += '---\nTotal: ' + formatMoney(total) + '\n';
+        navigator.clipboard.writeText(text).then(function() {
+            showToast('📋 Copied to clipboard!', 'success');
+        }).catch(function() {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            showToast('📋 Copied!', 'success');
+        });
+    });
+
+    upgradeBtn.addEventListener('click', openModal);
+
+    bulkToggleBtn.addEventListener('click', function() {
+        bulkArea.style.display = bulkArea.style.display === 'none' ? 'block' : 'none';
+    });
+
+    bulkCancelBtn.addEventListener('click', function() {
+        bulkArea.style.display = 'none';
+        bulkInput.value = '';
+    });
+
+    bulkAddBtn.addEventListener('click', function() {
+        const lines = bulkInput.value.split('\n').filter(function(l) { return l.trim(); });
+        let added = 0, errors = 0;
+        lines.forEach(function(line) {
+            const parts = line.trim().split(/\s+/);
+            if (parts.length >= 2) {
+                const name = parts.slice(0, -1).join(' ');
+                const pct = parseFloat(parts[parts.length - 1]);
+                if (!isNaN(pct) && pct >= 0 && pct <= 100) {
+                    if (addMember(name, pct)) added++;
+                    else errors++;
+                } else errors++;
+            } else errors++;
+        });
+        if (added > 0) {
+            showToast('Added ' + added + ' member' + (added > 1 ? 's' : '') + (errors > 0 ? ', ' + errors + ' error(s)' : ''), 'success');
+        } else {
+            showToast('No valid entries found. Use: Name 30', 'error');
+        }
+        bulkInput.value = '';
+        bulkArea.style.display = 'none';
+    });
+
+    // ============================================================
+    // ===== KEYBOARD SHORTCUTS =====
+    // ============================================================
+    document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
+            e.preventDefault();
+            undo();
+        }
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            e.preventDefault();
+            calculateBtn.click();
+        }
+        if (e.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    // ============================================================
+    // ===== ADMOB INITIALIZATION =====
+    // ============================================================
+    function initAdsense() {
+        try {
+            if (typeof adsbygoogle !== 'undefined') {
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            }
+        } catch (e) {
+            console.log('AdSense initialization skipped:', e.message);
+        }
+    }
+
+    // ============================================================
+    // ===== LOAD =====
+    // ============================================================
+    if (isDark) {
+        document.body.classList.add('dark');
+        darkModeBtn.textContent = '☀️ Light';
+    }
+
+    checkPaymentStatus();
+
+    window.addEventListener('load', function() {
+        setTimeout(initAdsense, 500);
+    });
+
+    render();
+    showToast('💰 Welcome to MoneySplit!', 'info');
+</script>
+
+</body>
+</html>
