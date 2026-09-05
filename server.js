@@ -223,10 +223,13 @@ app.get('/payment-callback', async (req, res) => {
 });
 
 app.get('/api/payment-result', (req, res) => {
+  console.log('Payment result request received with proof:', req.query.proof ? 'present' : 'missing');
   const proof = readProof(req.query.proof);
   if (!proof || !proof.tx_ref || !proof.transaction_id || !proof.plan) {
+    console.log('Invalid proof:', proof);
     return res.status(400).json({ verified: false, error: 'Invalid payment proof.' });
   }
+  console.log('Proof verified successfully:', proof);
   res.json({ verified: true, plan: proof.plan, email: proof.email });
 });
 
