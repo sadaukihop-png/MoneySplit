@@ -210,6 +210,11 @@ app.get('/api/payment-result', (req, res) => {
 // Optional: serve MoneySplit from the same server when deployed together.
 app.use(express.static(path.join(__dirname)));
 
+// Serve index.html for all other routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
 if (require.main === module) {
   app.listen(PORT, () => console.log(`MoneySplit payment server listening on port ${PORT}`));
 }
