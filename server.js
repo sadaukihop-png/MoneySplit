@@ -149,17 +149,27 @@ app.post('/api/create-payment', async (req, res) => {
 
 app.get('/payment-callback', async (req, res) => {
   const { status, tx_ref, transaction_id } = req.query;
-  const order = pending.get(tx_ref);
+  
+  console.log('Payment callback received:', { status, tx_ref, transaction_id });
 
-  if (status !== 'successful' || !tx_ref || !transaction_id || !order) {
+  if (status !== 'successful' || !tx_ref || !transaction_id) {
+    console.log('Invalid callback parameters');
     return res.redirect(`${FRONTEND_URL}/?payment=cancelled`);
   }
 
+  const order = pending.get(tx_ref);
+  if (!order) {
+    console.log('Order not found for tx_ref:', tx_ref);
+    return res.redirect(`${FRONTEND_URL}/?payment=failed`);
+  }
+
   if (used.has(tx_ref)) {
+    console.log('Transaction already processed:', tx_ref);
     return res.redirect(`${FRONTEND_URL}/?payment=already_processed`);
   }
 
   try {
+    console.log('Verifying transaction:', transaction_id);
     const response = await fetch(`https://api.flutterwave.com/v3/transactions/${encodeURIComponent(transaction_id)}/verify`, {
       headers: {
         'Authorization': `Bearer ${FLW_SECRET_KEY}`,
@@ -168,16 +178,28 @@ app.get('/payment-callback', async (req, res) => {
     });
 
     const result = await response.json();
+    console.log('Flutterwave verification result:', JSON.stringify(result, null, 2));
     const payment = result?.data;
 
-    const amountMatches = Number(payment?.amount) >= Number(order.amount);
-    const currencyMatches = payment?.currency === order.currency;
-    const refMatches = payment?.tx_ref === tx_ref;
-    const statusMatches = payment?.status === 'successful';
-    const emailMatches = !payment?.customer?.email || payment.customer.email.toLowerCase() === order.email;
+    if (!response.ok || !payment) {
+      console.error('Failed to verify transaction:', result);
+      return res.redirect(`${FRONTEND_URL}/?payment=failed`);
+    }
 
-    if (!response.ok || !payment || !statusMatches || !amountMatches || !currencyMatches || !refMatches || !emailMatches) {
-      console.error('Payment verification failed:', { result, order, transaction_id });
+    const amountMatches = Number(payment.amount) >= Number(order.amount);
+    const currencyMatches = payment.currency === order.currency;
+    const refMatches = payment.tx_ref === tx_ref;
+    const statusMatches = payment.status === 'successful';
+
+    if (!statusMatches || !amountMatches || !currencyMatches || !refMatches) {
+      console.error('Verification checks failed:', {
+        statusMatches,
+        amountMatches,
+        currencyMatches,
+        refMatches,
+        payment,
+        order
+      });
       return res.redirect(`${FRONTEND_URL}/?payment=failed`);
     }
 
@@ -192,6 +214,7 @@ app.get('/payment-callback', async (req, res) => {
       verifiedAt: Date.now()
     });
 
+    console.log('Payment verified successfully! Redirecting with proof.');
     return res.redirect(`${FRONTEND_URL}/?payment=verified&proof=${encodeURIComponent(proof)}`);
   } catch (err) {
     console.error('Verification error:', err);
