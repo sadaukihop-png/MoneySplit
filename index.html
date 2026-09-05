@@ -1244,32 +1244,132 @@ body.dark #exportDropdown .export-option {
         darkModeBtn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
         localStorage.setItem('moneysplit_dark', isDark);
     });
+// ============================================================
+// ===== EXPORT FUNCTIONS =====
+// ============================================================
+function getExportData() {
+    const price = getSalePrice() || 0;
+    let data = members.map(m => ({
+        name: m.name,
+        percentage: m.pct,
+        amount: (m.pct / 100) * price
+    }));
+    let total = data.reduce((sum, m) => sum + m.amount, 0);
+    return { data, total, price };
+}
 
-    exportBtn.addEventListener('click', function() {
-        if (members.length === 0) { showToast('No data to export', 'error'); return; }
-        let text = 'MoneySplit - Split Results\n';
-        text += 'Sale Price: ' + formatMoney(getSalePrice() || 0) + '\n';
-        text += 'Date: ' + new Date().toLocaleString() + '\n';
-        text += '---\n';
-        let total = 0;
-        members.forEach(function(m) {
-            const share = (m.pct / 100) * (getSalePrice() || 0);
-            total += share;
-            text += m.name + ' (' + m.pct + '%): ' + formatMoney(share) + '\n';
-        });
-        text += '---\nTotal: ' + formatMoney(total) + '\n';
-        navigator.clipboard.writeText(text).then(function() {
-            showToast('📋 Copied to clipboard!', 'success');
-        }).catch(function() {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            document.body.appendChild(ta);
-            ta.select();
-            document.execCommand('copy');
-            ta.remove();
-            showToast('📋 Copied!', 'success');
-        });
+function exportToClipboard() {
+    if (members.length === 0) { showToast('No data to export', 'error'); return; }
+    const { data, total, price } = getExportData();
+    let text = 'MoneySplit - Split Results\n';
+    text += 'Sale Price: ' + formatMoney(price) + '\n';
+    text += 'Date: ' + new Date().toLocaleString() + '\n';
+    text += '---\n';
+    data.forEach(m => {
+        text += m.name + ' (' + m.percentage + '%): ' + formatMoney(m.amount) + '\n';
     });
+    text += '---\nTotal: ' + formatMoney(total) + '\n';
+    
+    navigator.clipboard.writeText(text).then(function() {
+        showToast('📋 Copied to clipboard!', 'success');
+    }).catch(function() {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast('📋 Copied!', 'success');
+    });
+    closeExportDropdown();
+}
+
+function exportToCSV() {
+    if (members.length === 0) { showToast('No data to export', 'error'); return; }
+    const { data, total, price } = getExportData();
+    
+    let csv = 'Name,Percentage,Amount\n';
+    data.forEach(m => {
+        csv += m.name + ',' + m.percentage + '%,' + formatMoney(m.amount) + '\n';
+    });
+    csv += 'Total,, ' + formatMoney(total) + '\n';
+    
+    downloadFile(csv, 'MoneySplit_Results.csv', 'text/csv');
+    closeExportDropdown();
+}
+
+function exportToTXT() {
+    if (members.length === 0) { showToast('No data to export', 'error'); return; }
+    const { data, total, price } = getExportData();
+    
+    let text = 'MoneySplit - Split Results\n';
+    text += 'Sale Price: ' + formatMoney(price) + '\n';
+    text += 'Date: ' + new Date().toLocaleString() + '\n';
+    text += '----------------------------------------\n';
+    data.forEach(m => {
+        text += m.name + ' (' + m.percentage + '%): ' + formatMoney(m.amount) + '\n';
+    });
+    text += '----------------------------------------\n';
+    text += 'Total: ' + formatMoney(total) + '\n';
+    
+    downloadFile(text, 'MoneySplit_Results.txt', 'text/plain');
+    closeExportDropdown();
+}
+
+function downloadFile(content, filename, mimeType) {
+    const blob = new Blob([content], { type: mimeType + ';charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    showToast('📄 Downloaded ' + filename, 'success');
+}
+
+// ===== EXPORT DROPDOWN TOGGLE =====
+let exportDropdownVisible = false;
+
+function toggleExportDropdown() {
+    const dropdown = document.getElementById('exportDropdown');
+    exportDropdownVisible = !exportDropdownVisible;
+    dropdown.style.display = exportDropdownVisible ? 'block' : 'none';
+}
+
+function closeExportDropdown() {
+    const dropdown = document.getElementById('exportDropdown');
+    exportDropdownVisible = false;
+    dropdown.style.display = 'none';
+}
+
+// ===== EXPORT EVENTS =====
+exportBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (members.length === 0) { 
+        showToast('No data to export', 'error'); 
+        return; 
+    }
+    toggleExportDropdown();
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('#exportBtn') && !e.target.closest('#exportDropdown')) {
+        closeExportDropdown();
+    }
+});
+
+// Export option clicks
+document.querySelectorAll('.export-option').forEach(option => {
+    option.addEventListener('click', function() {
+        const format = this.dataset.format;
+        if (format === 'clipboard') exportToClipboard();
+        else if (format === 'csv') exportToCSV();
+        else if (format === 'txt') exportToTXT();
+    });
+});
 
     upgradeBtn.addEventListener('click', openModal);
 
