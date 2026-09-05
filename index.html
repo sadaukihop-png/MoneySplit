@@ -1259,6 +1259,7 @@ function getExportData() {
 }
 
 function exportToClipboard() {
+function exportToClipboard() {
     if (members.length === 0) { showToast('No data to export', 'error'); return; }
     const { data, total, price } = getExportData();
     let text = 'MoneySplit - Split Results\n';
@@ -1268,7 +1269,8 @@ function exportToClipboard() {
     data.forEach(m => {
         text += m.name + ' (' + m.percentage + '%): ' + formatMoney(m.amount) + '\n';
     });
-    text += '---\nTotal: ' + formatMoney(total) + '\n';
+    text += '---\n';
+    text += 'Total: ' + formatMoney(total) + '\n';
     
     navigator.clipboard.writeText(text).then(function() {
         showToast('📋 Copied to clipboard!', 'success');
@@ -1283,6 +1285,7 @@ function exportToClipboard() {
     });
     closeExportDropdown();
 }
+}
 
 function exportToCSV() {
     if (members.length === 0) { showToast('No data to export', 'error'); return; }
@@ -1290,9 +1293,13 @@ function exportToCSV() {
     
     let csv = 'Name,Percentage,Amount\n';
     data.forEach(m => {
-        csv += m.name + ',' + m.percentage + '%,' + formatMoney(m.amount) + '\n';
+        // Format amount with 2 decimal places
+        let amountFormatted = m.amount.toFixed(2);
+        csv += m.name + ',' + m.percentage + '%,' + amountFormatted + '\n';
     });
-    csv += 'Total,, ' + formatMoney(total) + '\n';
+    // Format total with 2 decimal places
+    let totalFormatted = total.toFixed(2);
+    csv += 'Total,,' + totalFormatted + '\n';
     
     downloadFile(csv, 'MoneySplit_Results.csv', 'text/csv');
     closeExportDropdown();
