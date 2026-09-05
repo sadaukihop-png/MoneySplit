@@ -1207,7 +1207,9 @@ body.dark #exportDropdown .export-option {
     currencySelect.addEventListener('change', render);
     decimalSelect.addEventListener('change', render);
     roundingCheck.addEventListener('change', render);
-    pieCheck.addEventListener('change', render);
+    pieCheck.addEventListener('change', function() {
+    calculate();
+});
 
     salePrice.addEventListener('input', function() {
         let raw = this.value.replace(/,/g, '');
@@ -1259,7 +1261,6 @@ function getExportData() {
 }
 
 function exportToClipboard() {
-function exportToClipboard() {
     if (members.length === 0) { showToast('No data to export', 'error'); return; }
     const { data, total, price } = getExportData();
     let text = 'MoneySplit - Split Results\n';
@@ -1284,7 +1285,6 @@ function exportToClipboard() {
         showToast('📋 Copied!', 'success');
     });
     closeExportDropdown();
-}
 }
 
 function exportToCSV() {
