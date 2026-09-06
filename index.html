@@ -1459,6 +1459,49 @@ document.querySelectorAll('.export-option').forEach(option => {
     render();
     showToast('💰 Welcome to MoneySplit!', 'info');
 </script>
+<!-- EmailJS Script -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
+<script>
+    // Initialize EmailJS
+    (function() {
+        emailjs.init('Xg964mhz7R2-ibovc'); // Your Public Key
+        
+        const form = document.getElementById('msFeedbackForm');
+        if (!form) return;
+        
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const status = document.getElementById('msFeedbackStatus');
+            status.textContent = 'Sending...';
+            
+            // Get form values
+            const type = document.getElementById('msFeedbackType').value;
+            const rating = document.getElementById('msFeedbackRating').value || 'Not rated';
+            const message = document.getElementById('msFeedbackMessage').value;
+            const email = document.getElementById('msFeedbackEmail').value || 'Anonymous';
+            
+            // Prepare email parameters
+            const templateParams = {
+                name: email,
+                message: message,
+                time: new Date().toLocaleString(),
+                type: type,
+                rating: rating,
+                email: email
+            };
+            
+            emailjs.send('service_2aw547j', 'template_prreewz', templateParams)
+                .then(function(response) {
+                    status.textContent = '✅ Thank you! Feedback sent successfully!';
+                    form.reset();
+                })
+                .catch(function(error) {
+                    status.textContent = '❌ Error sending feedback. Please try again.';
+                    console.error('EmailJS Error:', error);
+                });
+        });
+    })();
+</script>
 </body>
 </html>
